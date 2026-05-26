@@ -1,35 +1,84 @@
 import { useState } from 'react';
 import { Search, ChevronRight, ChevronDown, Phone, Video, Monitor, MoreHorizontal, Smile, Paperclip, Mic, UserPlus, RotateCcw, Power, Info, Bell, HelpCircle, Menu, Plus, Edit3, Grid, Send, X } from 'lucide-react';
 
+const AGENT_TAG    = { label: 'Santiago Garbers', color: '#2563eb', bg: '#dbeafe', agent: true };
+const PERSONAL_TAG = { label: 'Santiago Garbers', color: '#15803d', bg: '#dcfce7', personal: true };
+
 const CONVERSATIONS = [
   {
-    id: 1, name: 'Webchat -3864033', preview: '[Gabi Botmaker] hola', time: '10:35',
-    tag: { label: 'Santiago Garbers', color: '#15803d', bg: '#dcfce7' },
-    icon: 'W', iconBg: '#10b981', unread: 0,
+    id: 13, name: 'Valentina Suárez',        preview: 'Perfecto, lo reviso ahora mismo',          time: '10:42',
+    tag: PERSONAL_TAG, icon: 'VS', iconBg: '#ec4899', unread: 0,
   },
   {
-    id: 2, name: 'Tester Bm Tester', preview: 'hola', time: '3h',
-    tag: { label: 'Bot de Ale', color: '#1d4ed8', bg: '#dbeafe' },
+    id: 14, name: 'Marcos Ibáñez',           preview: 'Mandame el presupuesto cuando puedas',     time: '10:38',
+    tag: PERSONAL_TAG, icon: 'MI', iconBg: '#f97316', unread: 3,
+  },
+  {
+    id: 15, name: 'Rocío Peralta',           preview: '👍',                                       time: '10:31',
+    tag: PERSONAL_TAG, icon: 'RP', iconBg: '#a855f7', unread: 0,
+  },
+  {
+    id: 16, name: 'Tomás Villanueva',        preview: '¿Podemos hablar mañana?',                  time: '10:20',
+    tag: PERSONAL_TAG, icon: 'TV', iconBg: '#14b8a6', unread: 1,
+  },
+  {
+    id: 17, name: 'Camila Estrada',          preview: 'Listo, ya te envié los archivos',          time: '10:05',
+    tag: PERSONAL_TAG, icon: 'CE', iconBg: '#6366f1', unread: 0,
+  },
+  {
+    id: 1,  name: 'Webchat -3864033',       preview: '[Gabi Botmaker] hola',                    time: '10:35',
+    tag: AGENT_TAG, icon: 'W', iconBg: '#10b981', unread: 0,
+  },
+  {
+    id: 2,  name: 'Tester Bm Tester',        preview: 'hola',                                     time: '3h',
+    tag: { label: 'Bot de Ale', color: '#374151', bg: '#f3f4f6' },
     icon: 'T', iconBg: '#f59e0b', unread: 1, active: true, verified: true,
   },
   {
-    id: 3, name: 'Sesión 25/05/2026 18:51', preview: 'Duración: 3:23:38', time: 'Ahora',
+    id: 3,  name: 'Sesión 25/05/2026 18:51', preview: 'Duración: 3:23:38',                        time: 'Ahora',
     tag: null, icon: 'S', iconBg: '#8b5cf6', unread: 0, isSession: true, online: true,
   },
   {
-    id: 4, name: 'Luiz Reis', preview: 'Which shipping option do you prefer?', time: '7h',
+    id: 4,  name: 'Luiz Reis',               preview: 'Which shipping option do you prefer?',     time: '7h',
     tag: { label: 'Cafetería', color: '#374151', bg: '#f3f4f6' },
     icon: 'LR', iconBg: '#6b7280', unread: 0,
   },
   {
-    id: 5, name: '5581998059574', preview: 'Template: hola', time: '7h',
+    id: 5,  name: '5581998059574',           preview: 'Template: hola',                           time: '7h',
     tag: { label: 'Agus test', color: '#374151', bg: '#f3f4f6' },
     icon: '55', iconBg: '#3b82f6', unread: 0,
   },
   {
-    id: 6, name: 'Webchat -5386132', preview: 'Te responderemos a la brevedad', time: '29 Abr',
+    id: 6,  name: 'Webchat -5386132',        preview: 'Te responderemos a la brevedad',           time: '29 Abr',
     tag: { label: 'Flows', color: '#374151', bg: '#f3f4f6' },
     icon: 'W', iconBg: '#10b981', unread: 0,
+  },
+  {
+    id: 7,  name: 'María González',          preview: 'Necesito ayuda con mi pedido',             time: '28 Abr',
+    tag: AGENT_TAG, icon: 'MG', iconBg: '#ec4899', unread: 0,
+  },
+  {
+    id: 8,  name: 'Carlos Fernández',        preview: '¿Cuándo llega mi envío?',                  time: '27 Abr',
+    tag: { label: 'Soporte', color: '#374151', bg: '#f3f4f6' },
+    icon: 'CF', iconBg: '#f97316', unread: 0,
+  },
+  {
+    id: 9,  name: 'Webchat -9912044',        preview: 'Hola, quisiera más información',           time: '26 Abr',
+    tag: AGENT_TAG, icon: 'W', iconBg: '#10b981', unread: 2,
+  },
+  {
+    id: 10, name: 'Ana Ramírez',             preview: 'Gracias por la atención 😊',               time: '25 Abr',
+    tag: { label: 'Bot de Ale', color: '#374151', bg: '#f3f4f6' },
+    icon: 'AR', iconBg: '#a855f7', unread: 0,
+  },
+  {
+    id: 11, name: '5491167432210',           preview: 'ok perfecto',                              time: '24 Abr',
+    tag: AGENT_TAG, icon: '54', iconBg: '#3b82f6', unread: 0,
+  },
+  {
+    id: 12, name: 'Pedro Alvarado',          preview: 'Sí, confirmo la reunión para mañana',      time: '23 Abr',
+    tag: { label: 'Ventas', color: '#374151', bg: '#f3f4f6' },
+    icon: 'PA', iconBg: '#14b8a6', unread: 0,
   },
 ];
 
@@ -69,10 +118,27 @@ function ColombiaFlag() {
 function Tag({ tag }) {
   if (!tag) return null;
   return (
-    <span style={{
-      fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 10,
-      background: tag.bg, color: tag.color, whiteSpace: 'nowrap',
-    }}>
+    <span
+      title={tag.personal ? `Línea personal de ${tag.label}` : undefined}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 4,
+        fontSize: 10, fontWeight: 500, padding: '2px 8px 2px 4px', borderRadius: 10,
+        background: tag.bg, color: tag.color, whiteSpace: 'nowrap', cursor: 'default',
+      }}
+    >
+      {tag.agent && (
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+          <circle cx="8" cy="6" r="3" fill="#2563eb" />
+          <path d="M2 14c0-3.3 2.7-5 6-5s6 1.7 6 5" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+        </svg>
+      )}
+      {tag.personal && (
+        <svg width="12" height="12" viewBox="0 0 56 56" fill="none" style={{ flexShrink: 0 }}>
+          <rect width="56" height="56" rx="12" fill="#25D366" />
+          <path d="M28 11C18.61 11 11 18.61 11 28c0 3.02.81 5.85 2.22 8.29L11 45l8.93-2.19A17 17 0 0 0 28 45c9.39 0 17-7.61 17-17S37.39 11 28 11z" fill="white" />
+          <path d="M37.13 32.73c-.43-.22-2.54-1.25-2.93-1.39-.4-.14-.68-.22-.97.22-.29.43-1.11 1.39-1.36 1.68-.25.29-.5.32-.93.11-.43-.22-1.82-.67-3.46-2.14-1.28-1.14-2.14-2.55-2.39-2.98-.25-.43-.03-.66.19-.88.2-.2.43-.5.64-.76.22-.25.29-.43.43-.72.14-.28.07-.54-.04-.76-.11-.22-.97-2.34-1.33-3.2-.35-.84-.71-.72-.97-.73h-.83c-.29 0-.75.11-1.14.54-.39.43-1.5 1.46-1.5 3.56s1.54 4.13 1.75 4.42c.22.28 3.02 4.61 7.32 6.47 1.02.44 1.82.7 2.44.9.73.23 1.4.19 1.92.12.59-.09 1.8-.74 2.06-1.45.25-.71.25-1.32.18-1.45-.07-.14-.29-.22-.72-.43z" fill="#25D366" />
+        </svg>
+      )}
       {tag.label}
     </span>
   );
@@ -140,7 +206,7 @@ export default function ChatsView({ onBack }) {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
 
         {/* ── Left sidebar ── */}
-        <div style={{ width: 240, borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', background: '#fff', flexShrink: 0 }}>
+        <div style={{ width: 288, borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', background: '#fff', flexShrink: 0 }}>
           {/* Search row */}
           <div style={{ padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ flex: 1, position: 'relative' }}>
