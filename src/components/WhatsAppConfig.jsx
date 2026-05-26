@@ -220,6 +220,19 @@ function LinesTable({ rows, onRemove, onUpdateAlias, onVerChats }) {
     setEditingIndex(null);
   }
 
+  if (rows.length === 0) {
+    return (
+      <div style={{
+        border: '1px solid #e5e7eb', borderRadius: 10,
+        padding: '48px 24px', textAlign: 'center', background: '#fff',
+      }}>
+        <p style={{ fontSize: 14, color: '#6b7280', margin: 0 }}>
+          No tienes líneas personales vinculadas aún.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}>
       {/* Header */}
