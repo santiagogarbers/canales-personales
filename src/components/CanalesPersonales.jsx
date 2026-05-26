@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronDown, Mail, HelpCircle, Search } from 'lucide-react';
 import WhatsAppConfig from './WhatsAppConfig';
 import WhatsAppQRModal from './WhatsAppQRModal';
+import WhatsAppOnboardingModal from './WhatsAppOnboardingModal';
 
 function BotmakerLogo() {
   return (
@@ -13,19 +14,7 @@ function BotmakerLogo() {
 }
 
 function WhatsAppIcon({ size = 56 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 56 56" fill="none">
-      <rect width="56" height="56" rx="12" fill="#25D366" />
-      <path
-        d="M28 11C18.61 11 11 18.61 11 28c0 3.02.81 5.85 2.22 8.29L11 45l8.93-2.19A17 17 0 0 0 28 45c9.39 0 17-7.61 17-17S37.39 11 28 11z"
-        fill="white"
-      />
-      <path
-        d="M37.13 32.73c-.43-.22-2.54-1.25-2.93-1.39-.4-.14-.68-.22-.97.22-.29.43-1.11 1.39-1.36 1.68-.25.29-.5.32-.93.11-.43-.22-1.82-.67-3.46-2.14-1.28-1.14-2.14-2.55-2.39-2.98-.25-.43-.03-.66.19-.88.2-.2.43-.5.64-.76.22-.25.29-.43.43-.72.14-.28.07-.54-.04-.76-.11-.22-.97-2.34-1.33-3.2-.35-.84-.71-.72-.97-.73h-.83c-.29 0-.75.11-1.14.54-.39.43-1.5 1.46-1.5 3.56s1.54 4.13 1.75 4.42c.22.28 3.02 4.61 7.32 6.47 1.02.44 1.82.7 2.44.9.73.23 1.4.19 1.92.12.59-.09 1.8-.74 2.06-1.45.25-.71.25-1.32.18-1.45-.07-.14-.29-.22-.72-.43z"
-        fill="#25D366"
-      />
-    </svg>
-  );
+  return <img src="/whatsapp-icon.png" width={size} height={size} alt="WhatsApp" style={{ borderRadius: 12, display: 'block' }} />;
 }
 
 const CHANNELS = [
@@ -271,6 +260,7 @@ export default function CanalesPersonales({ onBack }) {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
   const [configChannel, setConfigChannel] = useState(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [showNewLine, setShowNewLine] = useState(false);
 
@@ -289,6 +279,12 @@ export default function CanalesPersonales({ onBack }) {
 
   return (
     <div style={s.page}>
+      {showOnboarding && (
+        <WhatsAppOnboardingModal
+          onClose={() => setShowOnboarding(false)}
+          onContinue={() => { setShowOnboarding(false); setShowQRModal(true); }}
+        />
+      )}
       {showQRModal && (
         <WhatsAppQRModal
           onClose={() => setShowQRModal(false)}
@@ -403,7 +399,7 @@ export default function CanalesPersonales({ onBack }) {
                 </div>
                 <button
                   style={s.configBtn}
-                  onClick={() => setShowQRModal(true)}
+                  onClick={() => setShowOnboarding(true)}
                   onMouseEnter={e => e.currentTarget.style.background = '#1d4ed8'}
                   onMouseLeave={e => e.currentTarget.style.background = '#2563eb'}
                 >

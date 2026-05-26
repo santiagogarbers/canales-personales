@@ -59,13 +59,7 @@ function QRCode({ size = 220 }) {
 }
 
 function WALogo({ size = 64 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 56 56" fill="none">
-      <circle cx="28" cy="28" r="28" fill="#25D366" />
-      <path d="M28 8C17 8 8 17 8 28c0 3.5.94 6.8 2.6 9.64L8 48l10.6-2.56A19.94 19.94 0 0 0 28 48c11 0 20-9 20-20S39 8 28 8z" fill="white" />
-      <path d="M38.6 33.9c-.5-.25-2.96-1.46-3.42-1.63-.46-.17-.8-.25-1.13.25-.34.5-1.3 1.63-1.6 1.96-.3.34-.59.38-1.1.13-.5-.25-2.13-.79-4.06-2.52-1.5-1.34-2.51-3-2.8-3.5-.3-.5-.03-.77.22-1.02.23-.23.5-.6.75-.9.25-.3.34-.5.5-.84.17-.33.08-.63-.04-.88-.12-.25-1.13-2.72-1.55-3.72-.41-.98-.83-.84-.96-.84H23c-.33 0-.88.13-1.34.63s-1.75 1.71-1.75 4.17c0 2.46 1.8 4.83 2.04 5.17.25.33 3.54 5.4 8.59 7.58.96.41 1.7.66 2.29 1.04 1.2.38 2.29.33 3.16.2.96-.14 2.96-.96 3.38-1.9.42-.96.42-1.78.3-1.96-.12-.17-.46-.25-.96-.5z" fill="#25D366" />
-    </svg>
-  );
+  return <img src="/whatsapp-icon.png" width={size} height={size} alt="WhatsApp" style={{ borderRadius: size * 0.2, display: 'block' }} />;
 }
 
 const STEPS_LABELS = [
@@ -132,34 +126,26 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
           style={{
             position: 'absolute', top: 14, right: 14, zIndex: 10,
             width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.2)', border: 'none',
+            background: 'rgba(0,0,0,0.08)', border: 'none',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: 'white', transition: 'background .15s',
+            cursor: 'pointer', color: '#374151', transition: 'background .15s',
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.35)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.15)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.08)'}
         >
           <X size={16} />
         </button>
 
-        {/* Green header */}
+        {/* White header */}
         <div style={{
-          background: 'linear-gradient(135deg, #1a7a54 0%, #128C7E 60%, #075E54 100%)',
-          padding: '28px 32px 32px',
+          background: '#ffffff',
+          borderBottom: '1px solid #e5e7eb',
+          padding: '24px 32px',
           display: 'flex', alignItems: 'center', gap: 14,
         }}>
-          <div style={{
-            width: 44, height: 44, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.18)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
-            <svg width="26" height="26" viewBox="0 0 56 56" fill="none">
-              <path d="M28 4C14.7 4 4 14.7 4 28c0 4.2 1.13 8.14 3.1 11.55L4 52l12.8-3.05A23.92 23.92 0 0 0 28 52c13.3 0 24-10.7 24-24S41.3 4 28 4z" fill="white" />
-              <path d="M37.9 33.6c-.6-.3-3.5-1.74-4.05-1.93-.55-.2-.95-.3-1.35.3-.4.6-1.54 1.93-1.9 2.33-.34.4-.7.45-1.3.15-.6-.3-2.52-.93-4.8-2.97-1.77-1.58-2.97-3.53-3.32-4.13-.34-.6-.04-.92.26-1.22.28-.27.6-.7.9-1.05.3-.35.4-.6.6-1 .2-.4.1-.75-.05-1.05-.15-.3-1.35-3.25-1.85-4.45-.49-1.17-.98-1-.35-1.02l-1.15-.02c-.4 0-1.05.15-1.6.75-.54.6-2.08 2.03-2.08 4.95s2.13 5.74 2.43 6.14c.3.4 4.2 6.4 10.17 8.98 1.42.62 2.53.98 3.4 1.26 1.43.45 2.73.38 3.75.23.82-.13 2.52-1.03 2.87-2.02.36-.98.36-1.83.25-2.01-.1-.2-.4-.3-1-.6z" fill="#25D366" />
-            </svg>
-          </div>
-          <span style={{ fontSize: 15, fontWeight: 700, color: 'white', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            WhatsApp Web
+          <img src="/whatsapp-icon.png" width={44} height={44} alt="WhatsApp" style={{ borderRadius: 12, display: 'block', flexShrink: 0 }} />
+          <span style={{ fontSize: 15, fontWeight: 700, color: '#111827' }}>
+            Utiliza WhatsApp Personal en Botmaker
           </span>
         </div>
 
@@ -169,14 +155,14 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
             <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
               <div style={{ flex: 1 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 400, color: '#525252', marginBottom: 24, lineHeight: 1.3 }}>
-                  Use WhatsApp on your computer
+                  Escaneá el código QR desde tu celular
                 </h2>
                 <ol style={{ paddingLeft: 0, margin: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 18 }}>
                   {[
-                    <>Open WhatsApp on your phone</>,
-                    <>Tap <strong>Menu</strong> <span style={{ color: '#6b7280' }}>⋮</span> on Android, or <strong>Settings</strong> <span style={{ fontSize: 13, color: '#6b7280' }}>⚙</span> on iPhone</>,
-                    <>Tap <strong>Linked devices</strong> and then <strong>Link a device</strong></>,
-                    <>Point your phone at this screen to capture the QR code</>,
+                    <>Abrí WhatsApp en tu teléfono</>,
+                    <>Tocá <strong>Menú</strong> <span style={{ color: '#6b7280' }}>⋮</span> en Android, o <strong>Configuración</strong> <span style={{ fontSize: 13, color: '#6b7280' }}>⚙</span> en iPhone</>,
+                    <>Tocá <strong>Dispositivos vinculados</strong> y luego <strong>Vincular dispositivo</strong></>,
+                    <>Apuntá tu teléfono hacia esta pantalla para escanear el código QR</>,
                   ].map((step, i) => (
                     <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: '#374151', lineHeight: 1.5 }}>
                       <span style={{ color: '#6b7280', minWidth: 20 }}>{i + 1}.</span>
@@ -201,7 +187,7 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
                 onMouseEnter={e => e.currentTarget.style.color = '#075E54'}
                 onMouseLeave={e => e.currentTarget.style.color = '#128C7E'}
               >
-                Link with phone number
+                Vincular con número de teléfono
               </button>
               <button
                 onClick={handleSimulate}
@@ -215,9 +201,7 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
                 onMouseEnter={e => e.currentTarget.style.background = '#1ebe5a'}
                 onMouseLeave={e => e.currentTarget.style.background = '#25D366'}
               >
-                <svg width="14" height="14" viewBox="0 0 56 56" fill="none">
-                  <path d="M28 4C14.7 4 4 14.7 4 28c0 4.2 1.13 8.14 3.1 11.55L4 52l12.8-3.05A23.92 23.92 0 0 0 28 52c13.3 0 24-10.7 24-24S41.3 4 28 4z" fill="white" />
-                </svg>
+                <img src="/whatsapp-icon.png" width={16} height={16} alt="" style={{ borderRadius: 4, display: 'block' }} />
                 Simular escaneo
               </button>
             </div>
