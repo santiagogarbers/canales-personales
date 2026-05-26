@@ -206,7 +206,7 @@ export default function ChatsView({ onBack }) {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
 
         {/* ── Left sidebar ── */}
-        <div style={{ width: 288, borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', background: '#fff', flexShrink: 0 }}>
+        <div style={{ width: 346, borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', background: '#fff', flexShrink: 0 }}>
           {/* Search row */}
           <div style={{ padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ flex: 1, position: 'relative' }}>
