@@ -71,11 +71,19 @@ const STEPS_LABELS = [
 export default function WhatsAppQRModal({ onClose, onSuccess }) {
   const [scanState, setScanState] = useState('idle'); // idle | loading | success
   const [progress, setProgress] = useState(0);
+  const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
     if (scanState !== 'success') return;
-    const t = setTimeout(() => onSuccess?.(), 2000);
-    return () => clearTimeout(t);
+    setCountdown(3);
+    const interval = setInterval(() => {
+      setCountdown(c => {
+        if (c <= 1) { clearInterval(interval); return 0; }
+        return c - 1;
+      });
+    }, 1000);
+    const t = setTimeout(() => onSuccess?.(), 3000);
+    return () => { clearInterval(interval); clearTimeout(t); };
   }, [scanState]);
 
   useEffect(() => {
@@ -120,21 +128,23 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
         display: 'flex', flexDirection: 'column',
         background: '#fff', position: 'relative',
       }}>
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute', top: 14, right: 14, zIndex: 10,
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(0,0,0,0.08)', border: 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', color: '#374151', transition: 'background .15s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.15)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.08)'}
-        >
-          <X size={16} />
-        </button>
+        {/* Close button — hidden on success */}
+        {scanState !== 'success' && (
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute', top: 14, right: 14, zIndex: 10,
+              width: 32, height: 32, borderRadius: '50%',
+              background: 'rgba(0,0,0,0.08)', border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#374151', transition: 'background .15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.15)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.08)'}
+          >
+            <X size={16} />
+          </button>
+        )}
 
         {/* White header */}
         <div style={{
@@ -285,19 +295,9 @@ export default function WhatsAppQRModal({ onClose, onSuccess }) {
                   Tu línea de WhatsApp ya está vinculada.
                 </p>
               </div>
-              <button
-                onClick={onClose}
-                style={{
-                  marginTop: 8, padding: '10px 28px', borderRadius: 20,
-                  background: '#25D366', color: 'white',
-                  border: 'none', fontSize: 13, fontWeight: 600,
-                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'background .15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = '#1ebe5a'}
-                onMouseLeave={e => e.currentTarget.style.background = '#25D366'}
-              >
-                Cerrar
-              </button>
+              <p style={{ fontSize: 13, color: '#9ca3af', margin: 0 }}>
+                Redirigiendo en {countdown} {countdown === 1 ? 'segundo' : 'segundos'}...
+              </p>
             </div>
             {/* Full green bar at bottom */}
             <div style={{ height: 6, background: 'linear-gradient(90deg, #25D366, #128C7E)' }} />

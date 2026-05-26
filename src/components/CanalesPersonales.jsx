@@ -21,18 +21,10 @@ const CHANNELS = [
   {
     id: 1,
     icon: <WhatsAppIcon />,
-    name: 'WhatsApp',
+    name: 'WhatsApp Personal',
     description: 'Envía mensajes, realizar llamadas y comparte archivos mediante WhatsApp.',
     connected: true,
     type: 'texto',
-  },
-  {
-    id: 2,
-    icon: <WhatsAppIcon />,
-    name: 'Llamadas por WhatsApp',
-    description: 'Realiza llamadas mediante WhatsApp.',
-    connected: true,
-    type: 'voz',
   },
 ];
 
