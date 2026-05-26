@@ -365,6 +365,84 @@ function AccessTable({ rows }) {
   );
 }
 
+const SHARED_LINES = [
+  { initials: 'GT', avatarColor: '#dbeafe', country: 'AR', phone: '+54 11 4523 9871', user: 'Gonzalo Tarnofsky',    status: 'Conectada',    activity: 'Hace 20 min' },
+  { initials: 'FC', avatarColor: '#fce7f3', country: 'BR', phone: '+55 21 9987 6543', user: 'Fernando Costantini',  status: 'Conectada',    activity: 'Hace 1 hora' },
+  { initials: 'FM', avatarColor: '#fef3c7', country: 'CL', phone: '+56 9 8765 4321',  user: 'Florencia Mirabella',  status: 'Pausada',      activity: 'Hace 2 horas' },
+  { initials: 'GC', avatarColor: '#d1fae5', country: 'MX', phone: '+52 55 1234 5678', user: 'Guillermo Caratti',    status: 'Conectada',    activity: 'Hace 35 min' },
+  { initials: 'LR', avatarColor: '#ede9fe', country: 'CO', phone: '+57 310 456 7890',  user: 'Lucía Rodríguez',     status: 'Conectada',    activity: 'Ahora mismo' },
+  { initials: 'MP', avatarColor: '#fef3c7', country: 'AR', phone: '+54 9 11 6677 8899',user: 'Martín Pereyra',      status: 'Desconectada', activity: 'Hace 5 horas' },
+  { initials: 'VG', avatarColor: '#fce7f3', country: 'UY', phone: '+598 99 234 567',   user: 'Valentina García',    status: 'Conectada',    activity: 'Hace 10 min' },
+  { initials: 'JB', avatarColor: '#dbeafe', country: 'PE', phone: '+51 991 234 567',   user: 'Javier Bustamante',   status: 'Pausada',      activity: 'Ayer' },
+  { initials: 'CS', avatarColor: '#d1fae5', country: 'MX', phone: '+52 33 9876 5432',  user: 'Camila Sotomayor',    status: 'Conectada',    activity: 'Hace 45 min' },
+  { initials: 'RM', avatarColor: '#fef9c3', country: 'BR', phone: '+55 11 9876 0001',  user: 'Ricardo Mendonça',    status: 'Desconectada', activity: 'Hace 1 día' },
+  { initials: 'AV', avatarColor: '#fce7f3', country: 'AR', phone: '+54 351 555 0102',  user: 'Agustina Villalba',   status: 'Conectada',    activity: 'Hace 3 min' },
+  { initials: 'DL', avatarColor: '#ede9fe', country: 'CL', phone: '+56 2 2345 6789',   user: 'Diego Larrañaga',     status: 'Pausada',      activity: 'Hace 6 horas' },
+  { initials: 'NF', avatarColor: '#dbeafe', country: 'CO', phone: '+57 320 987 6543',  user: 'Natalia Fuentes',     status: 'Conectada',    activity: 'Hace 15 min' },
+  { initials: 'EO', avatarColor: '#d1fae5', country: 'UY', phone: '+598 94 567 890',   user: 'Emilio Oviedo',       status: 'Desconectada', activity: 'Hace 2 días' },
+  { initials: 'SC', avatarColor: '#fef3c7', country: 'AR', phone: '+54 261 444 3322',  user: 'Sofía Carranza',      status: 'Conectada',    activity: 'Hace 52 min' },
+  { initials: 'PH', avatarColor: '#fce7f3', country: 'MX', phone: '+52 81 8765 4321',  user: 'Pablo Herrera',       status: 'Conectada',    activity: 'Hace 1 hora' },
+  { initials: 'IR', avatarColor: '#ede9fe', country: 'PE', phone: '+51 987 654 321',   user: 'Ignacio Riquelme',    status: 'Pausada',      activity: 'Ayer' },
+];
+
+const SHARED_COLUMNS = ['Perfil', 'País', 'Teléfono', 'Usuario', 'Estado', 'Ultima Actividad', 'Chats'];
+
+function SharedTable({ rows, onVerChats }) {
+  return (
+    <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '56px 60px 160px 1fr 130px 150px 110px',
+        background: '#2563eb', padding: '10px 16px', gap: 8,
+      }}>
+        {SHARED_COLUMNS.map(col => (
+          <div key={col} style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{col}</div>
+        ))}
+      </div>
+      {rows.map((row, i) => (
+        <div key={i} style={{
+          display: 'grid',
+          gridTemplateColumns: '56px 60px 160px 1fr 130px 150px 110px',
+          padding: '14px 16px', gap: 8, alignItems: 'center',
+          borderTop: i === 0 ? 'none' : '1px solid #f3f4f6', background: '#fff',
+        }}>
+          <div>
+            <div style={{
+              width: 36, height: 36, borderRadius: '50%', background: row.avatarColor,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, fontWeight: 600, color: '#6b7280',
+            }}>
+              {row.initials}
+            </div>
+          </div>
+          <div><Flag country={row.country} /></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 12, color: '#374151' }}>{row.phone}</span>
+            <Copy size={12} color="#9ca3af" style={{ cursor: 'pointer' }} />
+          </div>
+          <span style={{ fontSize: 13, color: '#374151' }}>{row.user}</span>
+          <StatusDot status={row.status} />
+          <span style={{ fontSize: 12, color: '#6b7280' }}>{row.activity}</span>
+          <button
+            onClick={() => onVerChats?.()}
+            style={{
+              padding: '5px 12px', borderRadius: 20,
+              border: '1.5px solid #2563eb', background: '#fff',
+              color: '#2563eb', fontSize: 12, fontWeight: 500,
+              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              whiteSpace: 'nowrap', transition: 'background .15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#eff6ff'}
+            onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+          >
+            Ver chats
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const AVATARS = ['#d1fae5', '#dbeafe', '#fce7f3', '#fef3c7'];
 const COUNTRIES = ['AR', 'CL', 'MX', 'CO'];
 
@@ -372,6 +450,7 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
   const [showQRModal, setShowQRModal] = useState(false);
   const [showChats, setShowChats] = useState(false);
   const [lines, setLines] = useState(newLine ? [NEW_LINE] : PERSONAL_LINES);
+  const [sharedSearch, setSharedSearch] = useState('');
   const counterRef = useRef(0);
 
   const accessLines = newLine ? [] : ACCESS_LINES;
@@ -499,13 +578,45 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
 
         {/* Section 2: Líneas que tengo acceso */}
         {accessLines.length > 0 && (
-          <div>
+          <div style={{ marginBottom: 36 }}>
             <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 14 }}>
               Líneas que tengo acceso
             </h2>
             <AccessTable rows={accessLines} />
           </div>
         )}
+
+        {/* Section 3: Canales Personales que tengo acceso */}
+        <div>
+          <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 14 }}>
+            Canales Personales que tengo acceso
+          </h2>
+          <div style={{ position: 'relative', marginBottom: 16, maxWidth: 280 }}>
+            <svg style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              value={sharedSearch}
+              onChange={e => setSharedSearch(e.target.value)}
+              placeholder="Buscar por usuario o teléfono..."
+              style={{
+                width: '100%', height: 36, paddingLeft: 32, paddingRight: 12,
+                border: '1px solid #d1d5db', borderRadius: 8, fontSize: 13,
+                color: '#374151', outline: 'none', fontFamily: 'Inter, sans-serif',
+                boxSizing: 'border-box', background: '#fff',
+              }}
+              onFocus={e => e.target.style.borderColor = '#2563eb'}
+              onBlur={e => e.target.style.borderColor = '#d1d5db'}
+            />
+          </div>
+          <SharedTable
+            rows={SHARED_LINES.filter(r =>
+              r.user.toLowerCase().includes(sharedSearch.toLowerCase()) ||
+              r.phone.includes(sharedSearch)
+            )}
+            onVerChats={() => setShowChats(true)}
+          />
+        </div>
       </div>
       </div>
     </div>
