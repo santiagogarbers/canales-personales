@@ -3,6 +3,7 @@ import TopBar from './components/TopBar';
 import Canvas from './components/Canvas';
 import ChatPanel from './components/ChatPanel';
 import CommandBar from './components/CommandBar';
+import CanalesPersonales from './components/CanalesPersonales';
 import { INITIAL_NODES, INITIAL_CONNECTIONS } from './data/initialNodes';
 
 const NODE_POSITIONS = {
@@ -13,6 +14,7 @@ const NODE_POSITIONS = {
 let nodeIdCounter = 100;
 
 export default function App() {
+  const [view, setView] = useState('canales'); // 'editor' | 'canales'
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [connections, setConnections] = useState(INITIAL_CONNECTIONS);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
@@ -155,9 +157,13 @@ export default function App() {
     setSelectedNodeId(prev => prev === id ? null : id);
   }
 
+  if (view === 'canales') {
+    return <CanalesPersonales onBack={() => setView('editor')} />;
+  }
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar onCommandBar={() => setShowCommandBar(true)} theme={theme} onToggleTheme={toggleTheme} />
+      <TopBar onCommandBar={() => setShowCommandBar(true)} theme={theme} onToggleTheme={toggleTheme} onCanales={() => setView('canales')} />
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
         <Canvas
