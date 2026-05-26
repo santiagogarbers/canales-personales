@@ -142,7 +142,7 @@ export default function WhatsAppOnboardingModal({ onClose, onContinue }) {
       }}
     >
       <div style={{
-        width: 860, maxHeight: '92vh', borderRadius: 14,
+        width: 1114, maxHeight: '92vh', borderRadius: 14,
         overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.35)',
         background: '#fff', position: 'relative',
         display: 'flex', flexDirection: 'column',
@@ -228,8 +228,12 @@ export default function WhatsAppOnboardingModal({ onClose, onContinue }) {
           </div>
 
           {/* Right: WA mockup */}
-          <div style={{ flex: 1, overflow: 'hidden', padding: 32 }}>
-            <WAMockup />
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, overflow: 'hidden' }}>
+            <img
+              src="/whatsappmock.png"
+              alt="WhatsApp mockup"
+              style={{ display: 'block', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+            />
           </div>
         </div>
 
