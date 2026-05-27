@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Mail, HelpCircle, ChevronLeft, Copy, Pencil, Plus, MoreHorizontal, LogOut } from 'lucide-react';
+import { ChevronDown, Mail, HelpCircle, ChevronLeft, Copy, Pencil, Plus, MoreHorizontal, LogOut, Share2, X, Search } from 'lucide-react';
 import WhatsAppQRModal from './WhatsAppQRModal';
 import WhatsAppOnboardingModal from './WhatsAppOnboardingModal';
 import ChatsView from './ChatsView';
@@ -451,6 +451,283 @@ function SharedTable({ rows, onVerChats }) {
   );
 }
 
+
+function MailboxIllustration() {
+  return (
+    <svg width="90" height="80" viewBox="0 0 90 80" fill="none">
+      <rect x="18" y="28" width="54" height="38" rx="6" fill="#2563eb" />
+      <rect x="18" y="28" width="54" height="14" rx="6" fill="#1d4ed8" />
+      <rect x="38" y="42" width="14" height="24" rx="3" fill="#1e40af" />
+      <rect x="10" y="42" width="8" height="24" rx="2" fill="#60a5fa" />
+      <rect x="62" y="42" width="8" height="24" rx="2" fill="#60a5fa" />
+      <rect x="30" y="20" width="30" height="18" rx="4" fill="#3b82f6" />
+      <rect x="30" y="20" width="30" height="8" rx="4" fill="#2563eb" />
+      <rect x="38" y="28" width="14" height="10" rx="2" fill="#1d4ed8" />
+      <path d="M 45 16 C 42 8 36 6 33 10 C 30 14 34 20 38 20" stroke="#93c5fd" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M 45 16 C 48 8 54 6 57 10 C 60 14 56 20 52 20" stroke="#93c5fd" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <circle cx="45" cy="15" r="2.5" fill="#bfdbfe" />
+      <rect x="40" y="34" width="10" height="6" rx="1" fill="#60a5fa" />
+      <path d="M40 34 L45 38 L50 34" stroke="#1d4ed8" strokeWidth="1" fill="none" />
+    </svg>
+  );
+}
+
+const INVITE_USERS = [
+  { initials: 'CM', color: '#dbeafe', name: 'Carlos Mendez', email: 'carlos.mendez@botmaker.io' },
+  { initials: 'LG', color: '#fce7f3', name: 'Laura Gómez', email: 'laura.gomez@botmaker.io' },
+  { initials: 'PS', color: '#fef3c7', name: 'Pedro Sánchez', email: 'pedro.sanchez@botmaker.io' },
+  { initials: 'AS', color: '#d1fae5', name: 'Ana Souza', email: 'ana.souza@botmaker.io' },
+  { initials: 'PR', color: '#ede9fe', name: 'Pedro Rojas', email: 'pedro.rojas@botmaker.io' },
+  { initials: 'MG', color: '#fee2e2', name: 'María García', email: 'maria.garcia@botmaker.io' },
+];
+
+function InviteModal({ onClose }) {
+  const [inviteSearch, setInviteSearch] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [invited, setInvited] = useState([]);
+  const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const LINK = 'app.botmaker.com/channels/whatsapp-personal';
+
+  const matches = inviteSearch.trim()
+    ? INVITE_USERS.filter(u =>
+        u.name.toLowerCase().includes(inviteSearch.toLowerCase()) ||
+        u.email.toLowerCase().includes(inviteSearch.toLowerCase())
+      )
+    : [];
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(e.target) &&
+        inputRef.current && !inputRef.current.contains(e.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(LINK).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  function handleSelect(user) {
+    setInviteSearch(user.email);
+    setDropdownOpen(false);
+  }
+
+  function handleSend() {
+    const value = inviteSearch.trim();
+    if (!value) return;
+    const matched = INVITE_USERS.find(u => u.email === value || u.name.toLowerCase() === value.toLowerCase());
+    const entry = matched || {
+      initials: value[0].toUpperCase(),
+      color: '#f3f4f6',
+      name: value,
+      email: value,
+    };
+    if (!invited.find(u => u.email === entry.email)) {
+      setInvited(prev => [...prev, entry]);
+    }
+    setInviteSearch('');
+    setDropdownOpen(false);
+  }
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 1000,
+      background: 'rgba(0,0,0,0.45)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div style={{
+        background: '#fff', borderRadius: 14,
+        width: 480, maxWidth: '92vw',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+        padding: '28px 28px 24px',
+        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+        position: 'relative',
+      }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
+          <div style={{ flex: 1 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111827', margin: 0, marginBottom: 6 }}>
+              Invitar al canal
+            </h2>
+            <p style={{ fontSize: 13, color: '#6b7280', margin: 0, lineHeight: 1.5, maxWidth: 280 }}>
+              Invita a tu equipo a colaborar en este canal de WhatsApp Personal.
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <MailboxIllustration />
+            <button
+              onClick={onClose}
+              style={{
+                width: 28, height: 28, borderRadius: 6, border: 'none',
+                background: '#f3f4f6', cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', color: '#6b7280',
+                flexShrink: 0, marginTop: 2,
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = '#e5e7eb'}
+              onMouseLeave={e => e.currentTarget.style.background = '#f3f4f6'}
+            >
+              <X size={14} />
+            </button>
+          </div>
+        </div>
+
+        {/* Invite team members */}
+        <div style={{ marginTop: 20, fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 8 }}>Invitar miembro</div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <Search size={14} style={{ position: 'absolute', left: 10, top: 12, color: '#9ca3af', pointerEvents: 'none' }} />
+            <input
+              ref={inputRef}
+              value={inviteSearch}
+              onChange={e => { setInviteSearch(e.target.value); setDropdownOpen(true); }}
+              onFocus={() => { if (inviteSearch.trim()) setDropdownOpen(true); }}
+              placeholder="Buscar por nombre o email"
+              style={{
+                width: '100%', height: 38, paddingLeft: 32, paddingRight: 12,
+                border: '1px solid #d1d5db', borderRadius: 8,
+                fontSize: 13, color: '#374151', background: '#fff',
+                outline: 'none', fontFamily: 'Inter, sans-serif',
+                boxSizing: 'border-box',
+              }}
+            />
+            {dropdownOpen && matches.length > 0 && (
+              <div
+                ref={dropdownRef}
+                style={{
+                  position: 'absolute', top: 42, left: 0, right: 0,
+                  background: '#fff', border: '1px solid #e5e7eb',
+                  borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
+                  zIndex: 10, overflow: 'hidden',
+                }}
+              >
+                {matches.map((u, i) => (
+                  <div
+                    key={i}
+                    onMouseDown={() => handleSelect(u)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '9px 12px', cursor: 'pointer',
+                      borderBottom: i < matches.length - 1 ? '1px solid #f3f4f6' : 'none',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                  >
+                    <div style={{
+                      width: 30, height: 30, borderRadius: '50%',
+                      background: u.color, display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', fontSize: 11, fontWeight: 600,
+                      color: '#6b7280', flexShrink: 0,
+                    }}>
+                      {u.initials}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: '#111827' }}>{u.name}</div>
+                      <div style={{ fontSize: 12, color: '#9ca3af' }}>{u.email}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <button
+            onClick={handleSend}
+            style={{
+              display: 'flex', alignItems: 'center',
+              background: '#2563eb', color: '#fff',
+              border: 'none', borderRadius: 8,
+              padding: '0 18px', height: 38, fontSize: 13, fontWeight: 500,
+              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+              whiteSpace: 'nowrap', flexShrink: 0,
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#1d4ed8'}
+            onMouseLeave={e => e.currentTarget.style.background = '#2563eb'}
+          >
+            Enviar invitación
+          </button>
+        </div>
+
+        {invited.length > 0 && (
+          <div style={{ marginTop: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 8 }}>Invitados</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {invited.map((u, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '7px 10px', borderRadius: 8, background: '#f9fafb',
+                  border: '1px solid #f3f4f6',
+                }}>
+                  <div style={{
+                    width: 30, height: 30, borderRadius: '50%',
+                    background: u.color, display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', fontSize: 11, fontWeight: 600,
+                    color: '#6b7280', flexShrink: 0,
+                  }}>
+                    {u.initials}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#111827' }}>{u.name}</div>
+                    <div style={{ fontSize: 12, color: '#9ca3af' }}>{u.email}</div>
+                  </div>
+                  <span style={{
+                    fontSize: 11, color: '#16a34a', background: '#dcfce7',
+                    borderRadius: 20, padding: '2px 10px', fontWeight: 500,
+                  }}>
+                    Invitado
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Link de acceso */}
+        <div style={{ marginTop: 20 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 8 }}>Link de acceso</div>
+          <div style={{
+            display: 'flex', alignItems: 'center',
+            border: '1px solid #e5e7eb', borderRadius: 8,
+            background: '#f9fafb', overflow: 'hidden',
+          }}>
+            <span style={{
+              flex: 1, padding: '9px 12px', fontSize: 13, color: '#374151',
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>
+              {LINK}
+            </span>
+            <div style={{ display: 'flex', borderLeft: '1px solid #e5e7eb', flexShrink: 0 }}>
+              <button
+                onClick={handleCopy}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  padding: '9px 14px', background: 'none', border: 'none',
+                  fontSize: 12, color: copied ? '#16a34a' : '#374151',
+                  cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontWeight: 500,
+                  transition: 'color .15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'}
+                onMouseLeave={e => e.currentTarget.style.background = 'none'}
+              >
+                <Copy size={13} />
+                {copied ? '¡Copiado!' : 'Copiar'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 const AVATARS = ['#d1fae5', '#dbeafe', '#fce7f3', '#fef3c7'];
 const COUNTRIES = ['AR', 'CL', 'MX', 'CO'];
 
@@ -458,7 +735,8 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
   const [showChats, setShowChats] = useState(false);
-  const [lines, setLines] = useState(newLine ? [NEW_LINE] : PERSONAL_LINES);
+  const [showInvite, setShowInvite] = useState(false);
+  const [lines, setLines] = useState([]);
   const [sharedSearch, setSharedSearch] = useState('');
   const counterRef = useRef(0);
 
@@ -497,6 +775,7 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
       background: '#f2f3f5',
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
+      {showInvite && <InviteModal onClose={() => setShowInvite(false)} />}
       {showOnboarding && (
         <WhatsAppOnboardingModal
           onClose={() => setShowOnboarding(false)}
@@ -565,22 +844,40 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
               <p style={{ fontSize: 13, color: '#6b7280' }}>Envía mensajes, realiza llamadas y comparte archivos mediante WhatsApp.</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowOnboarding(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: '#2563eb', color: '#fff',
-              border: 'none', borderRadius: 20,
-              padding: '10px 20px', fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = '#1d4ed8'}
-            onMouseLeave={e => e.currentTarget.style.background = '#2563eb'}
-          >
-            <Plus size={15} />
-            Nueva cuenta de Whatsapp
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              onClick={() => setShowInvite(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                background: '#ffffff', color: '#374151',
+                border: '1px solid #d1d5db', borderRadius: 20,
+                padding: '10px 20px', fontSize: 13, fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb'; e.currentTarget.style.borderColor = '#9ca3af'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = '#d1d5db'; }}
+            >
+              <Share2 size={15} />
+              Invitar
+            </button>
+            <button
+              onClick={() => setShowOnboarding(true)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                background: '#2563eb', color: '#fff',
+                border: 'none', borderRadius: 20,
+                padding: '10px 20px', fontSize: 13, fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = '#1d4ed8'}
+              onMouseLeave={e => e.currentTarget.style.background = '#2563eb'}
+            >
+              <Plus size={15} />
+              Nueva cuenta de Whatsapp
+            </button>
+          </div>
         </div>
 
         {/* Section 1: Líneas Personales conectadas */}
@@ -591,17 +888,7 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
           <LinesTable rows={lines} onRemove={handleRemoveLine} onUpdateAlias={handleUpdateAlias} onVerChats={() => setShowChats(true)} />
         </div>
 
-        {/* Section 2: Líneas que tengo acceso */}
-        {accessLines.length > 0 && (
-          <div style={{ marginBottom: 36 }}>
-            <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 14 }}>
-              Líneas que tengo acceso
-            </h2>
-            <AccessTable rows={accessLines} />
-          </div>
-        )}
-
-        {/* Section 3: Canales Personales que tengo acceso */}
+        {/* Section 2: Canales Personales que tengo acceso */}
         <div>
           <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111827', marginBottom: 14 }}>
             Canales Personales que tengo acceso

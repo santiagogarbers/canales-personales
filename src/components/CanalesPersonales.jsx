@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, Mail, HelpCircle, Search } from 'lucide-react';
 import WhatsAppConfig from './WhatsAppConfig';
-import WhatsAppQRModal from './WhatsAppQRModal';
-import WhatsAppOnboardingModal from './WhatsAppOnboardingModal';
 
 function BotmakerLogo() {
   return (
@@ -252,12 +250,9 @@ export default function CanalesPersonales({ onBack }) {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
   const [configChannel, setConfigChannel] = useState(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showQRModal, setShowQRModal] = useState(false);
-  const [showNewLine, setShowNewLine] = useState(false);
 
   if (configChannel === 'whatsapp') {
-    return <WhatsAppConfig onBack={() => { setConfigChannel(null); setShowNewLine(false); }} newLine={showNewLine} />;
+    return <WhatsAppConfig onBack={() => setConfigChannel(null)} />;
   }
 
   const filtered = CHANNELS.filter(ch => {
@@ -271,22 +266,6 @@ export default function CanalesPersonales({ onBack }) {
 
   return (
     <div style={s.page}>
-      {showOnboarding && (
-        <WhatsAppOnboardingModal
-          onClose={() => setShowOnboarding(false)}
-          onContinue={() => { setShowOnboarding(false); setShowQRModal(true); }}
-        />
-      )}
-      {showQRModal && (
-        <WhatsAppQRModal
-          onClose={() => setShowQRModal(false)}
-          onSuccess={() => {
-            setShowQRModal(false);
-            setShowNewLine(true);
-            setConfigChannel('whatsapp');
-          }}
-        />
-      )}
       {/* Top bar */}
       <div style={s.topbar}>
         <BotmakerLogo />
@@ -385,13 +364,10 @@ export default function CanalesPersonales({ onBack }) {
               <div style={s.channelName}>{ch.name}</div>
               <div style={s.channelDesc}>{ch.description}</div>
               <div style={s.channelFooter}>
-                <div style={s.connected}>
-                  <div style={s.connectedDot} />
-                  Conectado
-                </div>
+                <div />
                 <button
                   style={s.configBtn}
-                  onClick={() => setShowOnboarding(true)}
+                  onClick={() => setConfigChannel('whatsapp')}
                   onMouseEnter={e => e.currentTarget.style.background = '#1d4ed8'}
                   onMouseLeave={e => e.currentTarget.style.background = '#2563eb'}
                 >

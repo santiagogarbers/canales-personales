@@ -1,0 +1,161 @@
+@keyframes icon-shake {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-10deg); }
+  40%  { transform: rotate(8deg); }
+  60%  { transform: rotate(-5deg); }
+  80%  { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse-fade {
+  0% {
+    transform: scale(1);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.10),
+      0 8px 28px rgba(0, 0, 0, 0.08),
+      0 0 0 0px rgba(213, 233, 255, 0.8);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.12),
+      0 12px 36px rgba(0, 0, 0, 0.10),
+      0 0 0 10px rgba(213, 233, 255, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.10),
+      0 8px 28px rgba(0, 0, 0, 0.08),
+      0 0 0 20px rgba(213, 233, 255, 0);
+  }
+}
+
+/* ── Botón flotante ── */
+.floating-action-button {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+
+  appearance: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  text-decoration: none;
+
+  --anim: cubic-bezier(0.16, 1, 0.3, 1);
+  --anim-speed: 1.1s;
+
+  /* row-reverse: icono a la derecha, texto a la izquierda.
+     Como está anclado a la derecha, el botón crece hacia la izquierda al hacer hover. */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+
+  /* Collapsed: sin padding */
+  padding: 0;
+
+  background: #ffffff;
+  border: 0 solid transparent;
+  border-radius: 16px;
+
+  transform: scale(1);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.10),
+    0 8px 28px rgba(0, 0, 0, 0.08),
+    0 0 0 20px rgba(213, 233, 255, 0);
+
+  transition:
+    transform var(--anim-speed) var(--anim),
+    box-shadow var(--anim-speed) var(--anim),
+    padding var(--anim-speed) var(--anim),
+    border-radius var(--anim-speed) var(--anim);
+}
+
+.floating-action-button:not(:active) {
+  animation: pulse-fade 0.2s forwards;
+}
+
+/* Expanded: padding derecho para el texto */
+.floating-action-button:hover {
+  padding: 0 8px;
+  border-radius: 18px;
+  transform: scale(1.02);
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.12),
+    0 12px 36px rgba(0, 0, 0, 0.10),
+    0 0 0 0px rgba(213, 233, 255, 0);
+}
+
+.floating-action-button:active {
+  transform: scale(0.96);
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.10),
+    0 3px 10px rgba(0, 0, 0, 0.08);
+  animation: none;
+}
+
+.floating-action-button:hover .floating-action-button__icon-wrap {
+  animation: icon-shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+/* ── Icono (queda a la derecha, siempre visible) ── */
+.floating-action-button__icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #DEE1F3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+/* ── Texto (se revela a la izquierda del icono) ── */
+.floating-action-button__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+
+  /* Estado cerrado */
+  padding: 0;
+  max-width: 0;
+  opacity: 0;
+  margin-left: 0;
+
+  transition:
+    max-width 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.9s ease,
+    margin-left 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Estado abierto (hover) */
+.floating-action-button:hover .floating-action-button__text {
+  padding: 10px;
+  max-width: 180px;
+  opacity: 1;
+  margin-left: 0;
+}
+
+.floating-action-button__label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.floating-action-button__shortcut {
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+  line-height: 1.3;
+}

@@ -91,7 +91,7 @@ const s = {
   },
 };
 
-export default function TopBar({ onCommandBar, theme, onToggleTheme }) {
+export default function TopBar({ onCommandBar, theme, onToggleTheme, onCanales }) {
   return (
     <div style={s.bar}>
       <div style={s.logo}>
@@ -111,6 +111,19 @@ export default function TopBar({ onCommandBar, theme, onToggleTheme }) {
       </div>
 
       <div style={s.spacer} />
+
+      {onCanales && (
+        <button
+          style={{ ...s.iconBtn, gap: 4, padding: '0 10px', width: 'auto', fontSize: 12 }}
+          title="Canales"
+          onClick={onCanales}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12 19.79 19.79 0 0 1 1.95 3.37 2 2 0 0 1 3.95 2H7a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Canales
+        </button>
+      )}
 
       <div style={s.actions}>
         <button
