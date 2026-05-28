@@ -38,7 +38,7 @@ function Toggle({ on }) {
 }
 
 function StatusDot({ status }) {
-  const colors = { Conectado: '#22c55e', Conectada: '#22c55e', Desconectada: '#ef4444', Pausada: '#f59e0b' };
+  const colors = { Conectado: '#22c55e', Conectada: '#22c55e', Desconectada: '#ef4444', Pausada: '#f59e0b', 'Invitación enviada': '#2563eb' };
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#374151' }}>
       <span style={{ width: 8, height: 8, borderRadius: '50%', background: colors[status] || '#9ca3af', flexShrink: 0, display: 'inline-block' }} />
@@ -81,7 +81,7 @@ function Avatar({ initials, color = '#e5e7eb' }) {
 
 function Flag({ country }) {
   const flags = { AR: '🇦🇷', BR: '🇧🇷', CL: '🇨🇱', MX: '🇲🇽', CO: '🇨🇴' };
-  return <span style={{ fontSize: 16 }}>{flags[country] || '🌐'}</span>;
+  return <span style={{ fontSize: 16 }}>{flags[country] || (country === null ? '—' : '🌐')}</span>;
 }
 
 function ChatBtn() {
@@ -234,12 +234,13 @@ function LinesTable({ rows, onRemove, onUpdateAlias, onVerChats }) {
       <div style={{
         display: 'grid',
         gridTemplateColumns: '56px 60px 160px 1fr 130px 150px 110px 80px',
-        background: '#2563eb',
+        background: '#f9fafb',
+        borderBottom: '1px solid #e5e7eb',
         padding: '10px 16px',
         gap: 8,
       }}>
         {COLUMNS.map(col => (
-          <div key={col} style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{col}</div>
+          <div key={col} style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>{col}</div>
         ))}
       </div>
 
@@ -328,12 +329,13 @@ function AccessTable({ rows }) {
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr 160px 140px 120px',
-        background: '#2563eb',
+        background: '#f9fafb',
+        borderBottom: '1px solid #e5e7eb',
         padding: '10px 16px',
         gap: 8,
       }}>
         {ACCESS_COLUMNS.map((col, i) => (
-          <div key={i} style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{col}</div>
+          <div key={i} style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>{col}</div>
         ))}
       </div>
 
@@ -396,21 +398,32 @@ const SHARED_LINES = [
 const SHARED_COLUMNS = ['Perfil', 'País', 'Teléfono', 'Usuario', 'Estado', 'Ultima Actividad', 'Chats'];
 
 function SharedTable({ rows, onVerChats }) {
+  const [loadingKeys, setLoadingKeys] = useState(new Set());
+  const [resentKeys, setResentKeys] = useState(new Set());
+
+  function handleResend(key) {
+    setLoadingKeys(prev => new Set(prev).add(key));
+    setTimeout(() => {
+      setLoadingKeys(prev => { const s = new Set(prev); s.delete(key); return s; });
+      setResentKeys(prev => new Set(prev).add(key));
+    }, 1000);
+  }
+
   return (
     <div style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: '56px 60px 160px 1fr 130px 150px 110px',
-        background: '#2563eb', padding: '10px 16px', gap: 8,
+        gridTemplateColumns: '56px 60px 160px 1fr 156px 150px 110px',
+        background: '#f9fafb', borderBottom: '1px solid #e5e7eb', padding: '10px 16px', gap: 8,
       }}>
         {SHARED_COLUMNS.map(col => (
-          <div key={col} style={{ fontSize: 12, fontWeight: 600, color: '#fff' }}>{col}</div>
+          <div key={col} style={{ fontSize: 12, fontWeight: 600, color: '#6b7280' }}>{col}</div>
         ))}
       </div>
       {rows.map((row, i) => (
         <div key={i} style={{
           display: 'grid',
-          gridTemplateColumns: '56px 60px 160px 1fr 130px 150px 110px',
+          gridTemplateColumns: '56px 60px 160px 1fr 156px 150px 110px',
           padding: '14px 16px', gap: 8, alignItems: 'center',
           borderTop: i === 0 ? 'none' : '1px solid #f3f4f6', background: '#fff',
         }}>
@@ -431,20 +444,64 @@ function SharedTable({ rows, onVerChats }) {
           <span style={{ fontSize: 13, color: '#374151' }}>{row.user}</span>
           <StatusDot status={row.status} />
           <span style={{ fontSize: 12, color: '#6b7280' }}>{row.activity}</span>
-          <button
-            onClick={() => onVerChats?.()}
-            style={{
-              padding: '5px 12px', borderRadius: 20,
-              border: '1.5px solid #2563eb', background: '#fff',
-              color: '#2563eb', fontSize: 12, fontWeight: 500,
-              cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-              whiteSpace: 'nowrap', transition: 'background .15s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = '#eff6ff'}
-            onMouseLeave={e => e.currentTarget.style.background = '#fff'}
-          >
-            Ver chats
-          </button>
+          {(() => {
+            const key = row.user;
+            const isInvited = row.status === 'Invitación enviada';
+            const isLoading = loadingKeys.has(key);
+            const isResent = resentKeys.has(key);
+            if (isInvited) {
+              return (
+                <button
+                  onClick={() => !isLoading && !isResent && handleResend(key)}
+                  style={{
+                    padding: '5px 12px', borderRadius: 20,
+                    border: 'none',
+                    background: isResent ? '#dcfce7' : isLoading ? '#3b82f6' : '#2563eb',
+                    color: isResent ? '#16a34a' : '#fff',
+                    fontSize: 12, fontWeight: 500,
+                    cursor: isLoading || isResent ? 'default' : 'pointer',
+                    fontFamily: 'Inter, sans-serif',
+                    whiteSpace: 'nowrap', transition: 'all .2s',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                  }}
+                >
+                  {isLoading ? (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83">
+                          <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite" />
+                        </path>
+                      </svg>
+                      Enviando...
+                    </>
+                  ) : isResent ? (
+                    <>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      Enviado
+                    </>
+                  ) : 'Reenviar link'}
+                </button>
+              );
+            }
+            return (
+              <button
+                onClick={() => onVerChats?.()}
+                style={{
+                  padding: '5px 12px', borderRadius: 20,
+                  border: '1.5px solid #2563eb', background: '#fff',
+                  color: '#2563eb', fontSize: 12, fontWeight: 500,
+                  cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                  whiteSpace: 'nowrap', transition: 'background .15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#eff6ff'}
+                onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+              >
+                Ver chats
+              </button>
+            );
+          })()}
         </div>
       ))}
     </div>
@@ -481,11 +538,10 @@ const INVITE_USERS = [
   { initials: 'MG', color: '#fee2e2', name: 'María García', email: 'maria.garcia@botmaker.io' },
 ];
 
-function InviteModal({ onClose }) {
+function InviteModal({ onClose, invited, onInvite }) {
   const [inviteSearch, setInviteSearch] = useState('');
   const [copied, setCopied] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [invited, setInvited] = useState([]);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
   const LINK = 'app.botmaker.com/channels/whatsapp-personal';
@@ -532,7 +588,7 @@ function InviteModal({ onClose }) {
       email: value,
     };
     if (!invited.find(u => u.email === entry.email)) {
-      setInvited(prev => [...prev, entry]);
+      onInvite(entry);
     }
     setInviteSearch('');
     setDropdownOpen(false);
@@ -737,6 +793,7 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
   const [showChats, setShowChats] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [lines, setLines] = useState([]);
+  const [invited, setInvited] = useState([]);
   const [sharedSearch, setSharedSearch] = useState('');
   const counterRef = useRef(0);
 
@@ -775,7 +832,13 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
       background: '#f2f3f5',
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
-      {showInvite && <InviteModal onClose={() => setShowInvite(false)} />}
+      {showInvite && (
+        <InviteModal
+          onClose={() => setShowInvite(false)}
+          invited={invited}
+          onInvite={entry => setInvited(prev => [...prev, entry])}
+        />
+      )}
       {showOnboarding && (
         <WhatsAppOnboardingModal
           onClose={() => setShowOnboarding(false)}
@@ -912,7 +975,18 @@ export default function WhatsAppConfig({ onBack, newLine = false }) {
             />
           </div>
           <SharedTable
-            rows={SHARED_LINES.filter(r =>
+            rows={[
+              ...invited.map(u => ({
+                initials: u.initials,
+                avatarColor: u.color,
+                country: null,
+                phone: '—',
+                user: u.name,
+                status: 'Invitación enviada',
+                activity: 'Ahora mismo',
+              })),
+              ...SHARED_LINES,
+            ].filter(r =>
               r.user.toLowerCase().includes(sharedSearch.toLowerCase()) ||
               r.phone.includes(sharedSearch)
             )}
